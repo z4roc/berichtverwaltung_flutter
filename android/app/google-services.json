@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "1076346718940",
+    "project_id": "berichtverwaltung",
+    "storage_bucket": "berichtverwaltung.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1076346718940:android:17b82c31dabefced688219",
+        "android_client_info": {
+          "package_name": "com.example.pdfcreate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1076346718940-ibvb8bq308lpdbkn7q388td5dkb93v16.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3fgNFiN__BLpH3NSfn0NUzcjSIX8qsPY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1076346718940-ibvb8bq308lpdbkn7q388td5dkb93v16.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1076346718940-2vrn15ko9h23tm2mtmkaid7s9hae8v4p.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.pdfcreate"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1076346718940:android:f42c7ce543369451688219",
+        "android_client_info": {
+          "package_name": "dev.z4roc.flutter.berichtverwaltung_flutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1076346718940-ibvb8bq308lpdbkn7q388td5dkb93v16.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3fgNFiN__BLpH3NSfn0NUzcjSIX8qsPY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1076346718940-ibvb8bq308lpdbkn7q388td5dkb93v16.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1076346718940-2vrn15ko9h23tm2mtmkaid7s9hae8v4p.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.pdfcreate"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
