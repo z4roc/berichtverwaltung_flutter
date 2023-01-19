@@ -1,3 +1,5 @@
+import 'package:berichtverwaltung_flutter/services/auth_service.dart';
+import 'package:berichtverwaltung_flutter/services/firestore_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -10,7 +12,6 @@ class NavDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-
     final currentUser = FirebaseAuth.instance.currentUser;
 
     return Drawer(
@@ -66,7 +67,7 @@ class NavDrawer extends StatelessWidget {
                     ? Icons.nights_stay_rounded
                     : Icons.wb_sunny,
               ),
-              title: const Text('Toggle Theme'),
+              title: const Text('Theme ändern'),
               onTap: () {
                 final provider =
                     Provider.of<ThemeProvider>(context, listen: false);

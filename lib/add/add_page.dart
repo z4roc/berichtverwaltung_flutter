@@ -1,4 +1,8 @@
+import 'package:berichtverwaltung_flutter/main.dart';
+import 'package:berichtverwaltung_flutter/models/bericht.dart';
 import 'package:berichtverwaltung_flutter/services/firestore_service.dart';
+import 'package:berichtverwaltung_flutter/utils/snackbar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../models/user.dart';
@@ -46,7 +50,7 @@ class _CreateFieldState extends State<CreateField> {
   TextEditingController text1 = TextEditingController();
   TextEditingController text2 = TextEditingController();
   TextEditingController text3 = TextEditingController();
-
+  late final user;
   InputDecoration decoBuilder(String text) {
     return InputDecoration(
       border: const OutlineInputBorder(),
@@ -62,9 +66,9 @@ class _CreateFieldState extends State<CreateField> {
   );
 
   @override
-  Widget build(BuildContext context) {
-    final user = widget.user;
-
+  void initState() {
+    super.initState();
+    user = widget.user;
     nr.text = Calculations()
         .getBerichtNr(
           DateTime.fromMillisecondsSinceEpoch(
@@ -73,7 +77,10 @@ class _CreateFieldState extends State<CreateField> {
           DateTime.now(),
         )
         .toString();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Container(
       height: double.infinity,
       width: double.infinity,
@@ -85,19 +92,19 @@ class _CreateFieldState extends State<CreateField> {
               controller: nr,
               decoration: decoBuilder('Bericht Nr.'),
             ),
-            const SizedBox(),
-            Row(
-              children: [
-                const SizedBox(
-                  width: 10,
-                ),
-                const Text('Datum (von, bis): '),
-                ElevatedButton(
-                  onPressed: pickDateRange,
-                  child: Text(
-                      "${dtr.start.day}.${dtr.start.month}.${dtr.start.year} - ${dtr.end.day}.${dtr.end.month}.${dtr.end.year}"),
-                ),
-              ],
+            const SizedBox(
+              height: 10,
+            ),
+            ElevatedButton(
+              onPressed: pickDateRange,
+              child: Column(
+                children: [
+                  const Text('Zeitraum'),
+                  Text(
+                    "📅 ${dtr.start.day}.${dtr.start.month}.${dtr.start.year} - ${dtr.end.day}.${dtr.end.month}.${dtr.end.year}",
+                  ),
+                ],
+              ),
             ),
             const SizedBox(
               height: 10,
@@ -105,13 +112,6 @@ class _CreateFieldState extends State<CreateField> {
             TextFormField(
               controller: abtl,
               decoration: decoBuilder('Abteilung'),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            TextFormField(
-              controller: name,
-              decoration: decoBuilder('Name'),
             ),
             const SizedBox(
               height: 10,
@@ -137,14 +137,40 @@ class _CreateFieldState extends State<CreateField> {
               decoration: decoBuilder('Schule'),
               maxLines: 5,
             ),
+            const SizedBox(
+              height: 10,
+            ),
             ElevatedButton(
-              onPressed: () async {},
-              child: const Text('Bericht speichern'),
-            )
+              onPressed: addBericht,
+              child: const Text('Bericht erstellen'),
+            ),
           ],
         ),
       ),
     );
+  }
+
+  Future<void> addBericht() async {
+    Bericht neu = Bericht(
+      id: int.parse(nr.text),
+      abteilung: abtl.text,
+      datum_start: Timestamp.fromDate(dtr.start),
+      datum_end: Timestamp.fromDate(dtr.end),
+      aufgaben: text1.text,
+      thema: text2.text,
+      schule: text3.text,
+    );
+    try {
+      FirestoreService().createBericht(neu);
+      SnackBarProvider.showSnackBar(
+          text: 'Bericht erfolgreich erstellt', type: SnackbarType.success);
+      navigatorKey.currentState!.pop();
+    } catch (e) {
+      SnackBarProvider.showSnackBar(
+        text: e.toString(),
+        type: SnackbarType.error,
+      );
+    }
   }
 
   Future pickDateRange() async {

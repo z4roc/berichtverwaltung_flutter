@@ -1,5 +1,6 @@
 import 'package:berichtverwaltung_flutter/models/bericht.dart';
 import 'package:berichtverwaltung_flutter/models/user.dart';
+import 'package:berichtverwaltung_flutter/utils/snackbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -26,19 +27,49 @@ class FirestoreService {
     return AppUser.fromJson(userdata.data()!);
   }
 
-  Future<List<Bericht>> getAlleBerichte() async {
-    var coldata = await _db
-        .collection('users')
-        .doc(user!.uid)
-        .collection('berichte')
-        .get();
-
-    return coldata.docs.map((e) => Bericht.fromJson(e.data())).toList();
-  }
+  Stream<List<Bericht>> berichtStream() => _db
+      .collection('users')
+      .doc(user!.uid)
+      .collection('berichte')
+      .orderBy('id', descending: true)
+      .snapshots()
+      .map((snapshot) =>
+          snapshot.docs.map((e) => Bericht.fromJson(e.data())).toList());
 
   Stream<AppUser> userStream() => _db
       .collection('users')
       .doc(user!.uid)
       .snapshots()
       .map((appuser) => AppUser.fromJson(appuser.data()!));
+
+  Future<AppUser> getUser() async {
+    final doc = await _db.collection('users').doc(user!.uid).get();
+    return AppUser.fromJson(doc.data()!);
+  }
+
+  Future<void> createBericht(Bericht neu) async {
+    final colref =
+        _db.collection('users').doc(user!.uid).collection('berichte');
+    colref.doc(neu.id.toString()).set(neu.toJson());
+  }
+
+  Future<void> deleteBericht(int id) async {
+    try {
+      _db
+          .collection('users')
+          .doc(user!.uid)
+          .collection('berichte')
+          .doc(id.toString())
+          .delete();
+      SnackBarProvider.showSnackBar(
+        text: 'Bericht Nr.$id gelöscht',
+        type: SnackbarType.information,
+      );
+    } catch (e) {
+      SnackBarProvider.showSnackBar(
+        text: 'Fehler beim löschen des Berichts',
+        type: SnackbarType.error,
+      );
+    }
+  }
 }

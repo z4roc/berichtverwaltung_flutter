@@ -14,4 +14,30 @@ class AuthService {
       SnackBarProvider.showSnackBar(text: e.message!, type: SnackbarType.error);
     }
   }
+
+  Future<void> registerWithEmail(
+      {required String email, required String password}) async {
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+    } on FirebaseAuthException catch (e) {
+      SnackBarProvider.showSnackBar(
+        text: e.message!,
+        type: SnackbarType.error,
+      );
+    }
+  }
+
+  Future<void> signOut() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+    } on FirebaseAuthException catch (e) {
+      SnackBarProvider.showSnackBar(
+        text: e.message!,
+        type: SnackbarType.error,
+      );
+    }
+  }
 }

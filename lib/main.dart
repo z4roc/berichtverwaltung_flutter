@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:berichtverwaltung_flutter/firebase_options.dart';
 import 'package:berichtverwaltung_flutter/routes.dart';
+import 'package:berichtverwaltung_flutter/services/pdf_service.dart';
 import 'package:berichtverwaltung_flutter/themes.dart';
 import 'package:berichtverwaltung_flutter/utils/snackbar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -46,6 +50,7 @@ class _AppState extends State<MyApp> {
                 themeMode: themeProvider.themeMode,
                 routes: appRoutes,
                 scaffoldMessengerKey: SnackBarProvider.messengerKey,
+                navigatorKey: navigatorKey,
               );
             },
           );

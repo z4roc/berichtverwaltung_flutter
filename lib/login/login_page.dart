@@ -1,7 +1,6 @@
+import 'package:berichtverwaltung_flutter/main.dart';
 import 'package:berichtverwaltung_flutter/services/auth_service.dart';
 import 'package:flutter/material.dart';
-
-import '../utils/snackbar.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -51,7 +50,7 @@ class LoginPage extends StatelessWidget {
                 const SizedBox(
                   height: 20,
                 ),
-                OutlinedButton(
+                ElevatedButton(
                   onPressed: () async {
                     await AuthService().signInWithEmail(
                       email: email.text,
@@ -65,7 +64,16 @@ class LoginPage extends StatelessWidget {
                     ),
                   ),
                   child: const Text('Login'),
-                )
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                TextButton(
+                  onPressed: () {
+                    navigatorKey.currentState!.pushNamed('/register');
+                  },
+                  child: const Text('Registrieren'),
+                ),
               ],
             ),
           ),

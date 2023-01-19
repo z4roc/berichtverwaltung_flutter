@@ -10,6 +10,11 @@ ThemeData light = ThemeData(
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
     backgroundColor: Colors.blueGrey,
   ),
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ElevatedButton.styleFrom(
+      minimumSize: const Size.fromHeight(50),
+    ),
+  ),
 );
 
 ThemeData dark = ThemeData(
@@ -22,10 +27,23 @@ ThemeData dark = ThemeData(
     backgroundColor: Colors.indigo,
     foregroundColor: Colors.white,
   ),
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ElevatedButton.styleFrom(
+      minimumSize: const Size.fromHeight(50),
+    ),
+  ),
 );
 
+InputDecoration decoBuilder(String text) {
+  return InputDecoration(
+    border: const OutlineInputBorder(),
+    labelText: text,
+  );
+}
+
 class ThemeProvider extends ChangeNotifier {
-  ThemeMode themeMode = ThemeMode.system;
+  ThemeMode themeMode =
+      ThemeMode.system == ThemeMode.dark ? ThemeMode.dark : ThemeMode.light;
 
   bool get isDarkMode => themeMode == ThemeMode.dark;
 

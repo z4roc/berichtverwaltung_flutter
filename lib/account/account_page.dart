@@ -1,3 +1,5 @@
+import 'package:berichtverwaltung_flutter/main.dart';
+import 'package:berichtverwaltung_flutter/services/auth_service.dart';
 import 'package:berichtverwaltung_flutter/widgets/flyout_nav.dart';
 import 'package:flutter/material.dart';
 
@@ -11,6 +13,25 @@ class AccountPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Account'),
         centerTitle: true,
+      ),
+      body: Container(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            ElevatedButton(
+              onPressed: () async {
+                await AuthService().signOut();
+                navigatorKey.currentState!.pop();
+              },
+              child: Row(
+                children: const [
+                  Icon(Icons.logout_rounded),
+                  Text('Sign out'),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

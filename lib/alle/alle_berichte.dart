@@ -1,3 +1,5 @@
+import 'package:berichtverwaltung_flutter/detail/detail_page.dart';
+import 'package:berichtverwaltung_flutter/main.dart';
 import 'package:berichtverwaltung_flutter/models/bericht.dart';
 import 'package:berichtverwaltung_flutter/services/firestore_service.dart';
 import 'package:berichtverwaltung_flutter/widgets/flyout_nav.dart';
@@ -9,8 +11,6 @@ class AllPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Future<List<Bericht>> berichte = FirestoreService().getAlleBerichte();
-
     return Scaffold(
       drawer: const NavDrawer(),
       appBar: AppBar(
@@ -24,8 +24,8 @@ class AllPage extends StatelessWidget {
         ),
         child: const Icon(Icons.note_add_rounded),
       ),
-      body: FutureBuilder(
-        future: berichte,
+      body: StreamBuilder(
+        stream: FirestoreService().berichtStream(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return BerichtList(berichte: snapshot.data!);
@@ -67,10 +67,12 @@ class _BerichtListState extends State<BerichtList> {
         return Slidable(
           startActionPane: ActionPane(motion: const BehindMotion(), children: [
             SlidableAction(
-              onPressed: (context) {},
-              icon: Icons.file_download_outlined,
+              onPressed: (context) async {
+                FirestoreService().deleteBericht(items[index].id);
+              },
+              icon: Icons.delete,
               autoClose: true,
-              backgroundColor: Colors.indigo,
+              backgroundColor: Colors.red.shade400,
             ),
           ]),
           endActionPane: ActionPane(
@@ -85,11 +87,16 @@ class _BerichtListState extends State<BerichtList> {
             ],
           ),
           child: ListTile(
-            leading: const Icon(Icons.file_present_rounded, size: 30),
+            leading: const Icon(Icons.file_open_rounded, size: 30),
             title: Text(items[index].id.toString()),
             subtitle: Text(
               "${items[index].abteilung}   $dateString",
             ),
+            onTap: () {
+              navigatorKey.currentState!.push(MaterialPageRoute(
+                builder: (context) => DetailPage(bericht: items[index]),
+              ));
+            },
           ),
         );
       },
