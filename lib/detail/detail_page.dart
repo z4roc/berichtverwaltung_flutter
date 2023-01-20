@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:berichtverwaltung_flutter/main.dart';
+import 'package:berichtverwaltung_flutter/services/firestore_service.dart';
 import 'package:berichtverwaltung_flutter/services/pdf_service.dart';
 import 'package:berichtverwaltung_flutter/utils/snackbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -126,7 +127,18 @@ class _DetailPageState extends State<DetailPage> {
               height: 10,
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () async {
+                await FirestoreService().createBericht(
+                  Bericht(
+                      id: bericht.id,
+                      abteilung: abtl.text,
+                      datum_start: Timestamp.fromDate(dtr.start),
+                      datum_end: Timestamp.fromDate(dtr.end),
+                      aufgaben: aufgaben.text,
+                      thema: thema.text,
+                      schule: schule.text),
+                );
+              },
               child: const Text('Änderungen speichern 💾'),
             ),
             const SizedBox(
@@ -135,6 +147,15 @@ class _DetailPageState extends State<DetailPage> {
             ElevatedButton(
               onPressed: () async {
                 try {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    },
+                    barrierDismissible: false,
+                  );
                   isLoading = true;
                   final dir = await getApplicationDocumentsDirectory();
                   if (!await File("${dir.path}/Vorlage.pdf").exists()) {
@@ -153,12 +174,14 @@ class _DetailPageState extends State<DetailPage> {
                     ),
                   );
                   isLoading = false;
+                  navigatorKey.currentState!.pop();
                 } catch (e) {
                   SnackBarProvider.showSnackBar(
                     text: e.toString(),
                     type: SnackbarType.error,
                   );
                   isLoading = false;
+                  navigatorKey.currentState!.pop();
                 }
               },
               child: isLoading

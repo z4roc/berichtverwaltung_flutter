@@ -67,6 +67,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   email: email.text,
                   password: password.text,
                 );
+                navigatorKey.currentState!.pop();
               },
               style: OutlinedButton.styleFrom(
                 minimumSize: const Size.fromHeight(50),

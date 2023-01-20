@@ -1,3 +1,5 @@
+import 'package:berichtverwaltung_flutter/login/account_create.dart';
+import 'package:berichtverwaltung_flutter/main.dart';
 import 'package:berichtverwaltung_flutter/models/user.dart';
 import 'package:berichtverwaltung_flutter/services/auth_service.dart';
 import 'package:berichtverwaltung_flutter/services/firestore_service.dart';
@@ -45,33 +47,21 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: const NavDrawer(),
-      appBar: AppBar(
-        title: const Text('Ausbildungsberichte'),
-        centerTitle: true,
-      ),
-      body: Container(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            FutureBuilder<AppUser>(
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (snapshot.hasData) {
-                  return Overview(data: snapshot.data!);
-                } else {
-                  return const Text('Keine Daten gefunden');
-                }
-              },
-              future: FirestoreService().getUserData(),
-            ),
-          ],
-        ),
-      ),
+    return StreamBuilder<AppUser?>(
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (snapshot.hasData) {
+          return Overview(data: snapshot.data!);
+        } else if (snapshot.hasError) {
+          return const AccountCreatePage();
+        } else {
+          return const Center();
+        }
+      },
+      stream: FirestoreService().userStream(),
     );
   }
 }

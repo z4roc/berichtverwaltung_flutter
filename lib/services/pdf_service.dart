@@ -1,11 +1,9 @@
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:berichtverwaltung_flutter/models/user.dart';
 import 'package:berichtverwaltung_flutter/services/firestore_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:url_launcher/url_launcher.dart';

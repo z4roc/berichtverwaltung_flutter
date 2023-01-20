@@ -1,5 +1,7 @@
+import 'package:berichtverwaltung_flutter/main.dart';
 import 'package:berichtverwaltung_flutter/utils/snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 
 class AuthService {
   final userStream = FirebaseAuth.instance.authStateChanges();
@@ -33,6 +35,7 @@ class AuthService {
   Future<void> signOut() async {
     try {
       await FirebaseAuth.instance.signOut();
+      navigatorKey.currentState!.popUntil(ModalRoute.withName('/'));
     } on FirebaseAuthException catch (e) {
       SnackBarProvider.showSnackBar(
         text: e.message!,

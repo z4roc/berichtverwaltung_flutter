@@ -21,9 +21,9 @@ class AccountPage extends StatelessWidget {
             ElevatedButton(
               onPressed: () async {
                 await AuthService().signOut();
-                navigatorKey.currentState!.pop();
               },
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: const [
                   Icon(Icons.logout_rounded),
                   Text('Sign out'),

@@ -47,6 +47,7 @@ dependencies:
   syncfusion_flutter_pdf: ^20.3.61
   open_file: ^3.2.1
   url_launcher: ^6.1.7
+  intl: ^0.18.0
 
 dev_dependencies:
   flutter_test:

@@ -16,15 +16,23 @@ class FirestoreService {
     return data.toList();
   }
 
-  Future<AppUser> getUserData() async {
+  Future<AppUser?> getUserData() async {
     if (user == null) {
       return AppUser(
           name: '', ausbildungsbeginn: Timestamp.now(), role: 'azubi');
     }
 
     var userdata = await _db.collection('users').doc(user!.uid).get();
-
+    if (!userdata.exists) {
+      return null;
+    }
     return AppUser.fromJson(userdata.data()!);
+  }
+
+  Future<void> createUserData(AppUser appUser) async {
+    final userData = await _db.collection('users').doc(user!.uid).set(
+          appUser.toJson(),
+        );
   }
 
   Stream<List<Bericht>> berichtStream() => _db
@@ -36,7 +44,7 @@ class FirestoreService {
       .map((snapshot) =>
           snapshot.docs.map((e) => Bericht.fromJson(e.data())).toList());
 
-  Stream<AppUser> userStream() => _db
+  Stream<AppUser>? userStream() => _db
       .collection('users')
       .doc(user!.uid)
       .snapshots()
@@ -48,9 +56,16 @@ class FirestoreService {
   }
 
   Future<void> createBericht(Bericht neu) async {
-    final colref =
-        _db.collection('users').doc(user!.uid).collection('berichte');
-    colref.doc(neu.id.toString()).set(neu.toJson());
+    try {
+      final colref =
+          _db.collection('users').doc(user!.uid).collection('berichte');
+      colref.doc(neu.id.toString()).set(neu.toJson());
+    } catch (e) {
+      SnackBarProvider.showSnackBar(
+        text: "Fehler beim erstellen des Berichts",
+        type: SnackbarType.error,
+      );
+    }
   }
 
   Future<void> deleteBericht(int id) async {
