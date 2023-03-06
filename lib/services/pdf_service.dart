@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:berichtverwaltung_flutter/services/firestore_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:url_launcher/url_launcher.dart';
+import "package:http/http.dart" as http;
 
 import '../models/bericht.dart';
 
@@ -32,17 +32,37 @@ class PdfService {
   }
 
   Future<void> createPdf(Bericht bericht) async {
-    final dir = await getApplicationDocumentsDirectory();
+    //final dir = await getApplicationDocumentsDirectory();
+
     final user = await FirestoreService().getUser();
+
+    var storagePdf = FirebaseStorage.instance.ref().child("/Vorlage.pdf");
+
+    var downloadUrl = await storagePdf.getDownloadURL();
+    var data = await storagePdf.getData();
+    /*var data = await http.get(
+      Uri.parse(downloadUrl),
+    );*/
+
+    var pdfBytes = data;
+
     PdfDocument pdf = PdfDocument(
-      inputBytes: File("${dir.path}/Vorlage.pdf").readAsBytesSync(),
+      inputBytes:
+          pdfBytes /*File("${dir.path}/Vorlage.pdf").readAsBytesSync()*/,
     );
-    File out = File("${dir.path}/${bericht.id}.pdf");
+    //File out = File("${dir.path}/${bericht.id}.pdf");
 
     final page = pdf.pages[0];
 
+    var fontRef = FirebaseStorage.instance.ref().child("/FuturaCom-Medium.ttf");
+
+    var fontBytes = (await fontRef.getData())!.toList();
+    //(await http.get(Uri.parse(await fontRef.getDownloadURL()))).bodyBytes;
+
     final PdfFont font = PdfTrueTypeFont(
-        File("${dir.path}/FuturaCom-Medium.ttf").readAsBytesSync(), 12);
+      fontBytes /*File("${dir.path}/FuturaCom-Medium.ttf").readAsBytesSync()*/,
+      12,
+    );
 
     page.graphics.drawString(
       bericht.id.toString(),
@@ -117,31 +137,31 @@ class PdfService {
     );
 
     List<int> bytes = await pdf.save();
-    await out.writeAsBytes(bytes, flush: true);
+    //await out.writeAsBytes(bytes, flush: true);
     pdf.dispose();
-
-    uploadPdf(bericht.id.toString());
+    uploadPdf(bericht.id.toString(), bytes);
   }
 
-  Future<void> uploadPdf(String filename) async {
-    final dir = await getApplicationDocumentsDirectory();
-    final filepath = "${dir.path}/$filename.pdf";
+  Future<void> uploadPdf(String filename, List<int> bytes) async {
+    //final dir = await getApplicationDocumentsDirectory();
+    //final filepath = "${dir.path}/$filename.pdf";
 
-    File file = File(filepath);
+    //File file = File(filepath);
 
     final userRef = FirebaseStorage.instance
         .ref()
         .child("${FirebaseAuth.instance.currentUser!.uid}/$filename.pdf");
 
     try {
-      await userRef.putFile(file);
+      //await userRef.putFile(file);
+      await userRef.putData(Uint8List.fromList(bytes));
 
       await launchUrl(
         Uri.parse(await userRef.getDownloadURL()),
         mode: LaunchMode.externalApplication,
       );
 
-      await file.delete();
+      //await file.delete();
     } catch (e) {
       print(e.toString());
     }

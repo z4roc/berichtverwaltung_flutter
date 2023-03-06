@@ -1,5 +1,4 @@
 import 'package:berichtverwaltung_flutter/login/account_create.dart';
-import 'package:berichtverwaltung_flutter/main.dart';
 import 'package:berichtverwaltung_flutter/models/user.dart';
 import 'package:berichtverwaltung_flutter/services/auth_service.dart';
 import 'package:berichtverwaltung_flutter/services/firestore_service.dart';
@@ -7,7 +6,6 @@ import 'package:berichtverwaltung_flutter/widgets/dashboard_overview.dart';
 import 'package:flutter/material.dart';
 
 import '../login/login_page.dart';
-import '../widgets/flyout_nav.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});

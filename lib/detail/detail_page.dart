@@ -1,13 +1,9 @@
-import 'dart:io';
-
 import 'package:berichtverwaltung_flutter/main.dart';
 import 'package:berichtverwaltung_flutter/services/firestore_service.dart';
 import 'package:berichtverwaltung_flutter/services/pdf_service.dart';
 import 'package:berichtverwaltung_flutter/utils/snackbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:open_file/open_file.dart';
-import 'package:path_provider/path_provider.dart';
 
 import '../models/bericht.dart';
 import '../themes.dart';
@@ -163,15 +159,15 @@ class _DetailPageState extends State<DetailPage> {
                       barrierDismissible: false,
                     );
                     isLoading = true;
-                    final dir = await getApplicationDocumentsDirectory();
-                    if (!await File("${dir.path}/Vorlage.pdf").exists()) {
+                    //final dir = await getApplicationDocumentsDirectory();
+                    /*if (!await File("${dir.path}/Vorlage.pdf").exists()) {
                       await PdfService().getVorlage();
-                    }
+                    }*/
 
-                    if (!await File("${dir.path}/FuturaCom-Medium.ttf")
+                    /*if (!await File("${dir.path}/FuturaCom-Medium.ttf")
                         .exists()) {
                       await PdfService().getFont();
-                    }
+                    }*/
 
                     await PdfService().createPdf(
                       Bericht(

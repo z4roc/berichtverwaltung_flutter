@@ -1,4 +1,3 @@
-import 'package:berichtverwaltung_flutter/main.dart';
 import 'package:berichtverwaltung_flutter/models/user.dart';
 import 'package:berichtverwaltung_flutter/services/auth_service.dart';
 import 'package:berichtverwaltung_flutter/services/firestore_service.dart';
@@ -6,8 +5,6 @@ import 'package:berichtverwaltung_flutter/themes.dart';
 import 'package:berichtverwaltung_flutter/utils/snackbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:intl/intl.dart';
 
 class AccountCreatePage extends StatefulWidget {
@@ -114,7 +111,7 @@ class _AccountCreatePageState extends State<AccountCreatePage> {
                   showDialog(
                     context: context,
                     builder: (context) {
-                      return Center();
+                      return const Center();
                     },
                   );
                 }

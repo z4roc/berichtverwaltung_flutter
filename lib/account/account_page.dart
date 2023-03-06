@@ -1,4 +1,3 @@
-import 'package:berichtverwaltung_flutter/main.dart';
 import 'package:berichtverwaltung_flutter/services/auth_service.dart';
 import 'package:berichtverwaltung_flutter/widgets/flyout_nav.dart';
 import 'package:flutter/material.dart';
