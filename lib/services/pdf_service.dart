@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:berichtverwaltung_flutter/services/firestore_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -20,6 +21,16 @@ class PdfService {
     storage.writeToFile(file);
   }
 
+  Future<void> getFont() async {
+    final storage =
+        FirebaseStorage.instance.ref().child('/FuturaCom-Medium.ttf');
+    final dir = await getApplicationDocumentsDirectory();
+
+    final file = File("${dir.path}/FuturaCom-Medium.ttf");
+
+    storage.writeToFile(file);
+  }
+
   Future<void> createPdf(Bericht bericht) async {
     final dir = await getApplicationDocumentsDirectory();
     final user = await FirestoreService().getUser();
@@ -30,12 +41,12 @@ class PdfService {
 
     final page = pdf.pages[0];
 
+    final PdfFont font = PdfTrueTypeFont(
+        File("${dir.path}/FuturaCom-Medium.ttf").readAsBytesSync(), 12);
+
     page.graphics.drawString(
       bericht.id.toString(),
-      PdfStandardFont(
-        PdfFontFamily.helvetica,
-        12,
-      ),
+      font,
       brush: PdfSolidBrush(
         PdfColor(0, 0, 0),
       ),
@@ -44,34 +55,25 @@ class PdfService {
 
     page.graphics.drawString(
       bericht.abteilung,
-      PdfStandardFont(
-        PdfFontFamily.helvetica,
-        12,
-      ),
+      font,
       brush: PdfSolidBrush(
         PdfColor(0, 0, 0),
       ),
-      bounds: const Rect.fromLTWH(75, 75, 50, 50),
+      bounds: const Rect.fromLTWH(75, 74, 50, 50),
     );
 
     page.graphics.drawString(
       user.name,
-      PdfStandardFont(
-        PdfFontFamily.helvetica,
-        12,
-      ),
+      font,
       brush: PdfSolidBrush(
         PdfColor(0, 0, 0),
       ),
-      bounds: const Rect.fromLTWH(455, 75, 150, 50),
+      bounds: const Rect.fromLTWH(455, 74, 150, 50),
     );
 
     page.graphics.drawString(
       "${bericht.datum_start.toDate().day}.${bericht.datum_start.toDate().month}.${bericht.datum_start.toDate().year}",
-      PdfStandardFont(
-        PdfFontFamily.helvetica,
-        12,
-      ),
+      font,
       brush: PdfSolidBrush(
         PdfColor(0, 0, 0),
       ),
@@ -80,10 +82,7 @@ class PdfService {
 
     page.graphics.drawString(
       "${bericht.datum_end.toDate().day}.${bericht.datum_end.toDate().month}.${bericht.datum_end.toDate().year}",
-      PdfStandardFont(
-        PdfFontFamily.helvetica,
-        12,
-      ),
+      font,
       brush: PdfSolidBrush(
         PdfColor(0, 0, 0),
       ),
@@ -92,38 +91,29 @@ class PdfService {
 
     page.graphics.drawString(
       bericht.aufgaben,
-      PdfStandardFont(
-        PdfFontFamily.helvetica,
-        12,
-      ),
+      font,
       brush: PdfSolidBrush(
         PdfColor(0, 0, 0),
       ),
-      bounds: const Rect.fromLTWH(75, 125, 500, 500),
+      bounds: const Rect.fromLTWH(75, 125, 450, 500),
     );
 
     page.graphics.drawString(
       bericht.thema,
-      PdfStandardFont(
-        PdfFontFamily.helvetica,
-        12,
-      ),
+      font,
       brush: PdfSolidBrush(
         PdfColor(0, 0, 0),
       ),
-      bounds: const Rect.fromLTWH(75, 360, 500, 500),
+      bounds: const Rect.fromLTWH(75, 360, 450, 500),
     );
 
     page.graphics.drawString(
       bericht.schule,
-      PdfStandardFont(
-        PdfFontFamily.helvetica,
-        12,
-      ),
+      font,
       brush: PdfSolidBrush(
         PdfColor(0, 0, 0),
       ),
-      bounds: const Rect.fromLTWH(75, 585, 500, 500),
+      bounds: const Rect.fromLTWH(75, 595, 450, 500),
     );
 
     List<int> bytes = await pdf.save();

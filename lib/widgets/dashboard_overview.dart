@@ -1,3 +1,4 @@
+import 'package:berichtverwaltung_flutter/detail/detail_page.dart';
 import 'package:berichtverwaltung_flutter/main.dart';
 import 'package:berichtverwaltung_flutter/models/user.dart';
 import 'package:berichtverwaltung_flutter/services/calculation_service.dart';
@@ -46,8 +47,9 @@ class _OverviewState extends State<Overview> {
             ),
             Text(
               "Hallo ${userData.name}",
+              textAlign: TextAlign.left,
               style: const TextStyle(
-                fontSize: 32,
+                fontSize: 30,
               ),
             ),
             const SizedBox(
@@ -164,7 +166,7 @@ Widget last5list() => SizedBox(
                   ),
                   child: const Center(
                     child: Text(
-                      'Zu wenige Berichte, fange an welche zu schreiben!',
+                      'Zu wenige Berichte, fang an welche zu schreiben!',
                     ),
                   ),
                 ),
@@ -212,11 +214,19 @@ Widget last5list() => SizedBox(
                           ),
                           Row(
                             children: [
-                              SizedBox(),
-                              Spacer(),
+                              const SizedBox(),
+                              const Spacer(),
                               IconButton(
-                                onPressed: () {},
-                                icon: Icon(Icons.edit),
+                                onPressed: () {
+                                  navigatorKey.currentState!
+                                      .push(MaterialPageRoute(
+                                    builder: (context) {
+                                      return DetailPage(
+                                          bericht: snapshot.data![index]);
+                                    },
+                                  ));
+                                },
+                                icon: const Icon(Icons.edit),
                               ),
                             ],
                           )
@@ -228,7 +238,13 @@ Widget last5list() => SizedBox(
               );
             }
           } else {
-            return const CircularProgressIndicator();
+            return const SizedBox(
+              height: 175,
+              width: double.infinity,
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
           }
         },
       ),

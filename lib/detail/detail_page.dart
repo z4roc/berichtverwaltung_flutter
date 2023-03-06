@@ -71,98 +71,65 @@ class _DetailPageState extends State<DetailPage> {
         height: double.infinity,
         width: double.infinity,
         padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextFormField(
-              controller: abtl,
-              decoration: decoBuilder('Abteilung'),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                DateTimeRange? newDtr = await showDateRangePicker(
-                  context: context,
-                  initialDateRange: dtr,
-                  firstDate: DateTime(1900),
-                  lastDate: DateTime(2100),
-                );
-
-                if (newDtr == null) return;
-                setState(() {
-                  dtr = newDtr;
-                });
-              },
-              child: Text(
-                '📅 ${dtr.start.day}.${dtr.start.month}.${dtr.start.year} - ${dtr.end.day}.${dtr.end.month}.${dtr.end.year}',
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextFormField(
+                controller: abtl,
+                decoration: decoBuilder('Abteilung'),
               ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            TextFormField(
-              controller: aufgaben,
-              decoration: decoBuilder('Betriebliche Aufgaben'),
-              maxLines: 5,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            TextFormField(
-              controller: thema,
-              decoration: decoBuilder('Betriebliches Thema'),
-              maxLines: 5,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            TextFormField(
-              controller: schule,
-              decoration: decoBuilder('Schulthemen'),
-              maxLines: 5,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                await FirestoreService().createBericht(
-                  Bericht(
-                      id: bericht.id,
-                      abteilung: abtl.text,
-                      datum_start: Timestamp.fromDate(dtr.start),
-                      datum_end: Timestamp.fromDate(dtr.end),
-                      aufgaben: aufgaben.text,
-                      thema: thema.text,
-                      schule: schule.text),
-                );
-              },
-              child: const Text('Änderungen speichern 💾'),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                try {
-                  showDialog(
+              const SizedBox(
+                height: 10,
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  DateTimeRange? newDtr = await showDateRangePicker(
                     context: context,
-                    builder: (context) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    },
-                    barrierDismissible: false,
+                    initialDateRange: dtr,
+                    firstDate: DateTime(1900),
+                    lastDate: DateTime(2100),
                   );
-                  isLoading = true;
-                  final dir = await getApplicationDocumentsDirectory();
-                  if (!await File("${dir.path}/Vorlage.pdf").exists()) {
-                    await PdfService().getVorlage();
-                  }
 
-                  await PdfService().createPdf(
+                  if (newDtr == null) return;
+                  setState(() {
+                    dtr = newDtr;
+                  });
+                },
+                child: Text(
+                  '📅 ${dtr.start.day}.${dtr.start.month}.${dtr.start.year} - ${dtr.end.day}.${dtr.end.month}.${dtr.end.year}',
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              TextFormField(
+                controller: aufgaben,
+                decoration: decoBuilder('Betriebliche Aufgaben'),
+                maxLines: 5,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              TextFormField(
+                controller: thema,
+                decoration: decoBuilder('Betriebliches Thema'),
+                maxLines: 5,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              TextFormField(
+                controller: schule,
+                decoration: decoBuilder('Schulthemen'),
+                maxLines: 5,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  await FirestoreService().createBericht(
                     Bericht(
                       id: bericht.id,
                       abteilung: abtl.text,
@@ -173,25 +140,70 @@ class _DetailPageState extends State<DetailPage> {
                       schule: schule.text,
                     ),
                   );
-                  isLoading = false;
-                  navigatorKey.currentState!.pop();
-                } catch (e) {
                   SnackBarProvider.showSnackBar(
-                    text: e.toString(),
-                    type: SnackbarType.error,
+                    text: "Bericht erfolgreich bearbeitet",
+                    type: SnackbarType.success,
                   );
-                  isLoading = false;
-                  navigatorKey.currentState!.pop();
-                }
-              },
-              child: isLoading
-                  ? const CircularProgressIndicator()
-                  : const Text('PDF herunterladen 📁'),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-          ],
+                },
+                child: const Text('Änderungen speichern 💾'),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  try {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      },
+                      barrierDismissible: false,
+                    );
+                    isLoading = true;
+                    final dir = await getApplicationDocumentsDirectory();
+                    if (!await File("${dir.path}/Vorlage.pdf").exists()) {
+                      await PdfService().getVorlage();
+                    }
+
+                    if (!await File("${dir.path}/FuturaCom-Medium.ttf")
+                        .exists()) {
+                      await PdfService().getFont();
+                    }
+
+                    await PdfService().createPdf(
+                      Bericht(
+                        id: bericht.id,
+                        abteilung: abtl.text,
+                        datum_start: Timestamp.fromDate(dtr.start),
+                        datum_end: Timestamp.fromDate(dtr.end),
+                        aufgaben: aufgaben.text,
+                        thema: thema.text,
+                        schule: schule.text,
+                      ),
+                    );
+                    isLoading = false;
+                    navigatorKey.currentState!.pop();
+                  } catch (e) {
+                    SnackBarProvider.showSnackBar(
+                      text: e.toString(),
+                      type: SnackbarType.error,
+                    );
+                    isLoading = false;
+                    navigatorKey.currentState!.pop();
+                  }
+                },
+                child: isLoading
+                    ? const CircularProgressIndicator()
+                    : const Text('PDF herunterladen 📁'),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+            ],
+          ),
         ),
       ),
     );
