@@ -39,18 +39,21 @@ class _OverviewState extends State<Overview> {
         padding: const EdgeInsets.all(10),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
           children: [
             const SizedBox(
               height: 10,
             ),
-            Text(
-              "Hallo ${userData.name}",
-              textAlign: TextAlign.left,
-              style: const TextStyle(
-                fontSize: 30,
-              ),
+            Row(
+              children: [
+                Text(
+                  "Hallo ${userData.name}",
+                  textAlign: TextAlign.left,
+                  style: const TextStyle(
+                    fontSize: 24,
+                  ),
+                ),
+              ],
             ),
             const SizedBox(
               height: 20,
@@ -150,14 +153,14 @@ Widget homeCard(int bericht) => Container(
     );
 
 Widget last5list() => SizedBox(
-      height: 135,
+      height: 150,
       child: StreamBuilder(
         stream: FirestoreService().berichtStream(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data!.length < 3) {
-              return Container(
-                height: 175,
+              return SizedBox(
+                height: 200,
                 width: double.infinity,
                 child: Card(
                   elevation: 5,

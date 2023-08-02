@@ -35,6 +35,27 @@ class FirestoreService {
         );
   }
 
+  Stream<List<String>> taskStream() => _db
+          .collection("users")
+          .doc(user!.uid)
+          .collection("utils")
+          .doc("tasks")
+          .snapshots()
+          .map((doc) {
+        if (doc.exists) {
+          final docs = doc.data()!["tasks"];
+          final stringList = List<String>.from(docs);
+
+          return stringList;
+        } else {
+          doc.reference.set({
+            "tasks": <String>["Test Task 1"],
+          });
+
+          return List<String>.from(doc.data()!["tasks"]);
+        }
+      });
+
   Stream<List<Bericht>> berichtStream() => _db
       .collection('users')
       .doc(user!.uid)
@@ -86,5 +107,56 @@ class FirestoreService {
         type: SnackbarType.error,
       );
     }
+  }
+
+  Future<List<String>> getTasks() async {
+    try {
+      final ref = _db
+          .collection("users")
+          .doc(user!.uid)
+          .collection("utils")
+          .doc("tasks");
+
+      final document = await ref.get();
+
+      if (!document.exists) {
+        await ref.set({
+          "tasks": [],
+        });
+        return [];
+      } else {
+        return document.data()!["tasks"];
+      }
+    } catch (e) {
+      return [];
+    }
+  }
+
+  Future<void> addTask(String task) async {
+    try {
+      final ref = _db
+          .collection("users")
+          .doc(user!.uid)
+          .collection("utils")
+          .doc("tasks");
+
+      await ref.update({
+        "tasks": FieldValue.arrayUnion([task]),
+      });
+    } catch (e) {
+      SnackBarProvider.showSnackBar(
+        text: e.toString(),
+        type: SnackbarType.error,
+      );
+    }
+  }
+
+  Future<void> removeTask(String task) async {
+    final ref =
+        _db.collection("users").doc(user!.uid).collection("utils").doc("tasks");
+
+    await ref.update({
+      "tasks": FieldValue.arrayRemove([task]),
+    });
   }
 }

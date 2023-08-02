@@ -1,9 +1,12 @@
+import 'package:berichtverwaltung_flutter/add/task_provider.dart';
 import 'package:berichtverwaltung_flutter/main.dart';
 import 'package:berichtverwaltung_flutter/models/bericht.dart';
 import 'package:berichtverwaltung_flutter/services/firestore_service.dart';
+import 'package:berichtverwaltung_flutter/tasks/tasks_page.dart';
 import 'package:berichtverwaltung_flutter/utils/snackbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../models/user.dart';
 import '../services/calculation_service.dart';
@@ -81,10 +84,13 @@ class _CreateFieldState extends State<CreateField> {
 
   @override
   Widget build(BuildContext context) {
+    final state = Provider.of<TaskProvider>(context);
+    final taskList = state.selectedTasks.map((e) => "- $e").join("\n");
+    text1.text = taskList;
     return Container(
       height: double.infinity,
       width: double.infinity,
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(20),
       child: SingleChildScrollView(
         child: Column(
           children: [
@@ -120,6 +126,19 @@ class _CreateFieldState extends State<CreateField> {
               controller: text1,
               decoration: decoBuilder('Betriebliche Aufgaben'),
               maxLines: 5,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: OutlinedButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const TaskPage(),
+                    ),
+                  );
+                },
+                child: const Text("Aufgaben hinzufügen"),
+              ),
             ),
             const SizedBox(
               height: 10,

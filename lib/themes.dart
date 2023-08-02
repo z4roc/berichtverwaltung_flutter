@@ -1,15 +1,17 @@
+import 'package:berichtverwaltung_flutter/main.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 ThemeData light = ThemeData(
+  useMaterial3: true,
   brightness: Brightness.light,
-  primarySwatch: Colors.blueGrey,
+  //primarySwatch: Colors.lightBlue,
   appBarTheme: const AppBarTheme(
     centerTitle: true,
   ),
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
-    backgroundColor: Colors.blueGrey,
-  ),
+      //backgroundColor: Colors.lightBlue,
+      ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
       minimumSize: const Size.fromHeight(50),
@@ -18,6 +20,7 @@ ThemeData light = ThemeData(
 );
 
 ThemeData dark = ThemeData(
+  useMaterial3: true,
   brightness: Brightness.dark,
   primarySwatch: Colors.indigo,
   appBarTheme: const AppBarTheme(
@@ -42,6 +45,15 @@ InputDecoration decoBuilder(String text) {
 }
 
 class ThemeProvider extends ChangeNotifier {
+  ThemeProvider() {
+    loadInitialTheme();
+  }
+
+  void loadInitialTheme() {
+    bool isDark = prefs.getBool("dark") ?? false;
+    themeMode = isDark ? ThemeMode.dark : ThemeMode.light;
+  }
+
   ThemeMode themeMode =
       ThemeMode.system == ThemeMode.dark ? ThemeMode.dark : ThemeMode.light;
 
@@ -49,6 +61,7 @@ class ThemeProvider extends ChangeNotifier {
 
   toggleTheme(bool isDark) {
     themeMode = isDark ? ThemeMode.dark : ThemeMode.light;
+    prefs.setBool("dark", isDark);
     notifyListeners();
   }
 }

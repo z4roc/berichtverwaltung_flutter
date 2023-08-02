@@ -1,13 +1,23 @@
+import 'package:berichtverwaltung_flutter/add/task_provider.dart';
 import 'package:berichtverwaltung_flutter/detail/detail_page.dart';
 import 'package:berichtverwaltung_flutter/main.dart';
 import 'package:berichtverwaltung_flutter/models/bericht.dart';
 import 'package:berichtverwaltung_flutter/services/firestore_service.dart';
 import 'package:berichtverwaltung_flutter/widgets/flyout_nav.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:provider/provider.dart';
 
-class AllPage extends StatelessWidget {
+class AllPage extends StatefulWidget {
   const AllPage({super.key});
+
+  @override
+  State<AllPage> createState() => _AllPageState();
+}
+
+class _AllPageState extends State<AllPage> {
+  bool _isExtended = false;
 
   @override
   Widget build(BuildContext context) {
@@ -17,24 +27,52 @@ class AllPage extends StatelessWidget {
         title: const Text('Alle Berichte'),
         centerTitle: true,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.pushNamed(
-          context,
-          '/add',
+      floatingActionButton: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        width: _isExtended ? 100 : 56,
+        child: FloatingActionButton.extended(
+          label: _isExtended ? const Text("Neu") : const SizedBox(),
+          isExtended: _isExtended,
+          onPressed: () => Navigator.pushNamed(
+            context,
+            '/add',
+          ),
+          icon: const Icon(Icons.edit_outlined),
+          //child: const Icon(Icons.note_add_rounded),
         ),
-        child: const Icon(Icons.note_add_rounded),
       ),
-      body: StreamBuilder(
-        stream: FirestoreService().berichtStream(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return BerichtList(berichte: snapshot.data!);
+      body: NotificationListener<UserScrollNotification>(
+        onNotification: (notification) {
+          if (notification.direction == ScrollDirection.reverse ||
+              notification.direction == ScrollDirection.forward) {
+            setState(() {
+              _isExtended = false;
+            });
+            return false;
           } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return true;
           }
         },
+        child: NotificationListener<ScrollEndNotification>(
+          onNotification: (notification) {
+            setState(() {
+              _isExtended = true;
+            });
+            return true;
+          },
+          child: StreamBuilder(
+            stream: FirestoreService().berichtStream(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return BerichtList(berichte: snapshot.data!);
+              } else {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            },
+          ),
+        ),
       ),
     );
   }

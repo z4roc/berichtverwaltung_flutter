@@ -19,7 +19,7 @@ class NavDrawer extends StatelessWidget {
         children: [
           UserAccountsDrawerHeader(
             currentAccountPicture: const Avatar(),
-            accountName: const Text(''),
+            accountName: Text(currentUser?.displayName ?? ""),
             accountEmail: Text(currentUser!.email!),
             decoration: const BoxDecoration(
               color: Colors.green,
@@ -55,6 +55,14 @@ class NavDrawer extends StatelessWidget {
               leading: const Icon(Icons.list),
               title: const Text('Alle Berichte'),
               onTap: () => Navigator.pushNamed(context, '/alle'),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+            child: ListTile(
+              leading: const Icon(Icons.task_alt_rounded),
+              title: const Text('Tasks'),
+              onTap: () => Navigator.pushNamed(context, '/tasks'),
             ),
           ),
           const Spacer(),

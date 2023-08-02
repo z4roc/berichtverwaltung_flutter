@@ -4,6 +4,7 @@ import 'package:berichtverwaltung_flutter/alle/alle_berichte.dart';
 import 'package:berichtverwaltung_flutter/home/home_page.dart';
 import 'package:berichtverwaltung_flutter/login/account_create.dart';
 import 'package:berichtverwaltung_flutter/login/register_page.dart';
+import 'package:berichtverwaltung_flutter/tasks/tasks_page.dart';
 
 var appRoutes = {
   '/': (context) => const Home(),
@@ -12,4 +13,5 @@ var appRoutes = {
   '/account': (context) => const AccountPage(),
   '/register': (context) => const RegisterPage(),
   '/registerConfirm': (context) => const AccountCreatePage(),
+  '/tasks': (context) => const TaskPage(),
 };

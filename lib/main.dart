@@ -1,3 +1,4 @@
+import 'package:berichtverwaltung_flutter/add/task_provider.dart';
 import 'package:berichtverwaltung_flutter/firebase_options.dart';
 import 'package:berichtverwaltung_flutter/routes.dart';
 import 'package:berichtverwaltung_flutter/themes.dart';
@@ -5,8 +6,13 @@ import 'package:berichtverwaltung_flutter/utils/snackbar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+late final SharedPreferences prefs;
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  prefs = await SharedPreferences.getInstance();
   runApp(const MyApp());
 }
 
@@ -39,14 +45,17 @@ class _AppState extends State<MyApp> {
             create: (context) => ThemeProvider(),
             builder: (context, child) {
               final themeProvider = Provider.of<ThemeProvider>(context);
-              return MaterialApp(
-                debugShowCheckedModeBanner: false,
-                theme: light,
-                darkTheme: dark,
-                themeMode: themeProvider.themeMode,
-                routes: appRoutes,
-                scaffoldMessengerKey: SnackBarProvider.messengerKey,
-                navigatorKey: navigatorKey,
+              return ChangeNotifierProvider(
+                create: (_) => TaskProvider(),
+                child: MaterialApp(
+                  debugShowCheckedModeBanner: false,
+                  theme: light,
+                  darkTheme: dark,
+                  themeMode: themeProvider.themeMode,
+                  routes: appRoutes,
+                  scaffoldMessengerKey: SnackBarProvider.messengerKey,
+                  navigatorKey: navigatorKey,
+                ),
               );
             },
           );
