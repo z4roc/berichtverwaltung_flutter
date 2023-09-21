@@ -12,11 +12,7 @@ ThemeData light = ThemeData(
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
       //backgroundColor: Colors.lightBlue,
       ),
-  elevatedButtonTheme: ElevatedButtonThemeData(
-    style: ElevatedButton.styleFrom(
-      minimumSize: const Size.fromHeight(50),
-    ),
-  ),
+  elevatedButtonTheme: ElevatedButtonThemeData(),
 );
 
 ThemeData dark = ThemeData(

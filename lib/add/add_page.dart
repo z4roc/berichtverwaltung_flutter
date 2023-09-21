@@ -2,6 +2,7 @@ import 'package:berichtverwaltung_flutter/add/task_provider.dart';
 import 'package:berichtverwaltung_flutter/main.dart';
 import 'package:berichtverwaltung_flutter/models/bericht.dart';
 import 'package:berichtverwaltung_flutter/services/firestore_service.dart';
+import 'package:berichtverwaltung_flutter/services/openai_service.dart';
 import 'package:berichtverwaltung_flutter/tasks/tasks_page.dart';
 import 'package:berichtverwaltung_flutter/utils/snackbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -60,6 +61,8 @@ class _CreateFieldState extends State<CreateField> {
       labelText: text,
     );
   }
+
+  bool isLoading = false;
 
   DateTimeRange dtr = DateTimeRange(
     start: DateTime.now().subtract(
@@ -128,8 +131,8 @@ class _CreateFieldState extends State<CreateField> {
               maxLines: 5,
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: OutlinedButton(
+              padding: const EdgeInsets.all(10.0),
+              child: ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
@@ -147,6 +150,57 @@ class _CreateFieldState extends State<CreateField> {
               controller: text2,
               decoration: decoBuilder('Betriebliches Thema'),
               maxLines: 5,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: AnimatedCrossFade(
+                duration: const Duration(milliseconds: 300),
+                reverseDuration: const Duration(milliseconds: 700),
+                firstChild: ElevatedButton(
+                  onPressed: () async {
+                    if (text2.text.isEmpty || text2.text.length < 3) {
+                      SnackBarProvider.showSnackBar(
+                        text: "Kein richtiges Thema angegeben",
+                        type: SnackbarType.error,
+                      );
+                      return;
+                    }
+
+                    setState(() {
+                      isLoading = !isLoading;
+                    });
+
+                    final suggestions = await OpenAiService.onPromptSubmited(
+                      prompt: text2.text,
+                    );
+
+                    setState(() {
+                      text2.text = suggestions.first.message.content;
+                    });
+
+                    setState(() {
+                      isLoading = !isLoading;
+                    });
+                  },
+                  child: const Text("Text generieren"),
+                ),
+                secondChild: ElevatedButton(
+                  onPressed: () {},
+                  child: const SizedBox(
+                    height: 25,
+                    width: 25,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                crossFadeState: !isLoading
+                    ? CrossFadeState.showFirst
+                    : CrossFadeState.showSecond,
+              ),
             ),
             const SizedBox(
               height: 10,

@@ -1,4 +1,3 @@
-import 'package:berichtverwaltung_flutter/add/task_provider.dart';
 import 'package:berichtverwaltung_flutter/detail/detail_page.dart';
 import 'package:berichtverwaltung_flutter/main.dart';
 import 'package:berichtverwaltung_flutter/models/bericht.dart';
@@ -7,7 +6,6 @@ import 'package:berichtverwaltung_flutter/widgets/flyout_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:provider/provider.dart';
 
 class AllPage extends StatefulWidget {
   const AllPage({super.key});

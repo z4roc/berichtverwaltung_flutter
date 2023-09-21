@@ -2,7 +2,6 @@ import 'package:berichtverwaltung_flutter/models/user.dart';
 import 'package:berichtverwaltung_flutter/services/auth_service.dart';
 import 'package:berichtverwaltung_flutter/services/firestore_service.dart';
 import 'package:berichtverwaltung_flutter/widgets/flyout_nav.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class AccountPage extends StatelessWidget {

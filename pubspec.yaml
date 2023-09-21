@@ -47,9 +47,11 @@ dependencies:
   syncfusion_flutter_pdf: ^20.3.61
   open_file: ^3.2.1
   url_launcher: ^6.1.7
-  intl: ^0.18.0
-  http: ^0.13.5
+  intl: ^0.17.0
+  http: ^1.1.0
   shared_preferences: ^2.2.0
+  dart_openai: ^4.0.0
+  envied: ^0.3.0+3
 
 dev_dependencies:
   flutter_test:
@@ -61,8 +63,9 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
-  build_runner: ^2.0.0
+  build_runner: ^2.4.6
   json_serializable: ^6.5.4
+  envied_generator: ^0.3.0+3
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

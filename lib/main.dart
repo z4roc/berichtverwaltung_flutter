@@ -1,8 +1,10 @@
 import 'package:berichtverwaltung_flutter/add/task_provider.dart';
+import 'package:berichtverwaltung_flutter/env/env.dart';
 import 'package:berichtverwaltung_flutter/firebase_options.dart';
 import 'package:berichtverwaltung_flutter/routes.dart';
 import 'package:berichtverwaltung_flutter/themes.dart';
 import 'package:berichtverwaltung_flutter/utils/snackbar.dart';
+import 'package:dart_openai/dart_openai.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,6 +14,7 @@ late final SharedPreferences prefs;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  OpenAI.apiKey = Env.openAIKey;
   prefs = await SharedPreferences.getInstance();
   runApp(const MyApp());
 }
